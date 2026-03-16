@@ -57,15 +57,21 @@ mongoose.connect(process.env.MONGO_URI)
 // --- User Routes ---
 app.post("/api/users/signup", async (req, res) => {
   try {
+    const fullName = req.body?.fullName?.trim();
     const email = req.body?.email?.trim().toLowerCase();
     const password = req.body?.password;
+    const mobileNumber = req.body?.mobileNumber?.trim();
 
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required." });
+    if (!fullName || !email || !password) {
+      return res.status(400).json({ error: "Full name, email, and password are required." });
     }
 
     if (password.length < 6) {
       return res.status(400).json({ error: "Password must be at least 6 characters." });
+    }
+
+    if (mobileNumber && !/^[6-9]\d{9}$/.test(mobileNumber)) {
+      return res.status(400).json({ error: "Mobile number must be 10 digits and start with 6, 7, 8, or 9." });
     }
 
     const existingUser = await User.findOne({ email });
@@ -73,7 +79,7 @@ app.post("/api/users/signup", async (req, res) => {
       return res.status(400).json({ error: "Email already in use." });
 
     const uid = `mongo-user-${email.split("@")[0]}-${Date.now()}`;
-    const newUser = new User({ uid, email, password });
+    const newUser = new User({ uid, fullName, email, password, mobileNumber: mobileNumber || undefined });
     await newUser.save();
     res.status(201).json(sanitizeUser(newUser));
   } catch (error) {

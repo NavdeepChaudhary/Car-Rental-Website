@@ -25,6 +25,8 @@ interface CarListing {
 interface AppUser {
     uid: string;
     email: string;
+    fullName?: string;
+    mobileNumber?: string;
     isAdmin?: boolean;
 }
 
@@ -196,16 +198,21 @@ const useUserState = () => {
 
     useEffect(() => setStoredData(LOCAL_STORAGE_KEY_SESSION, currentUser), [currentUser]);
 
-    const signUp = async (email: string, pass: string): Promise<{ success: boolean, error?: string }> => {
+    const signUp = async (
+        fullName: string,
+        email: string,
+        pass: string,
+        mobileNumber?: string,
+    ): Promise<{ success: boolean, error?: string }> => {
         try {
             const res = await fetch(`${API_URL}/users/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password: pass })
+                body: JSON.stringify({ fullName, email, password: pass, mobileNumber })
             });
             const data = await res.json();
             if (!res.ok) return { success: false, error: data.error || 'Signup failed' };
-            setCurrentUser({ uid: data.uid, email: data.email });
+            setCurrentUser({ uid: data.uid, email: data.email, fullName: data.fullName, mobileNumber: data.mobileNumber });
             return { success: true };
         } catch (error: any) {
             return { success: false, error: error.message };
@@ -221,7 +228,7 @@ const useUserState = () => {
             });
             const data = await res.json();
             if (!res.ok) return { success: false, error: data.error || 'Login failed' };
-            setCurrentUser({ uid: data.uid, email: data.email });
+            setCurrentUser({ uid: data.uid, email: data.email, fullName: data.fullName, mobileNumber: data.mobileNumber });
             return { success: true };
         } catch (error: any) {
             return { success: false, error: error.message };
@@ -346,6 +353,8 @@ const ArrowLeftSvg = (props: React.SVGProps<SVGSVGElement>) => ( <svg {...props}
 const InboxSvg = (props: React.SVGProps<SVGSVGElement>) => ( <svg {...props} style={{...defaultIconStyle, ...props.style}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"> <path d="M22 12h-6l-2 3h-4l-2-3H2"/> <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/> </svg> );
 const SendSvg = (props: React.SVGProps<SVGSVGElement>) => ( <svg {...props} style={{...defaultIconStyle, ...props.style}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"> <path d="m22 2-7 20-4-9-9-4Z"/> <path d="M22 2 11 13"/> </svg> );
 const LockSvg = (props: React.SVGProps<SVGSVGElement>) => ( <svg {...props} style={{...defaultIconStyle, ...props.style}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> );
+const EyeSvg = (props: React.SVGProps<SVGSVGElement>) => ( <svg {...props} style={{...defaultIconStyle, ...props.style}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg> );
+const EyeOffSvg = (props: React.SVGProps<SVGSVGElement>) => ( <svg {...props} style={{...defaultIconStyle, ...props.style}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 3 18 18"/><path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"/><path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/></svg> );
 const CheckCircleSvg = (props: React.SVGProps<SVGSVGElement>) => ( <svg {...props} style={{...defaultIconStyle, ...props.style}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> );
 const DownloadSvg = (props: React.SVGProps<SVGSVGElement>) => ( <svg {...props} style={{...defaultIconStyle, ...props.style}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> );
 
@@ -469,6 +478,9 @@ const CarCard: React.FC<{
             onMouseLeave={() => setIsHovered(false)}
             onClick={handleClick}
         >
+            <div style={{position: 'absolute', top: '10px', left: '10px', backgroundColor: '#16a34a', color: 'white', padding: '5px 12px', borderRadius: '999px', fontWeight: 'bold', fontSize: '12px', zIndex: 20, boxShadow: '0 4px 6px rgba(0,0,0,0.4)'}}>
+                VERIFIED
+            </div>
             {isSold && (
                 <div style={{position: 'absolute', top: '10px', right: '10px', backgroundColor: '#ef4444', color: 'white', padding: '5px 15px', borderRadius: '5px', fontWeight: 'bold', zIndex: 20, transform: 'rotate(15deg)', boxShadow: '0 4px 6px rgba(0,0,0,0.5)'}}>
                     SOLD
@@ -1023,21 +1035,48 @@ const CarDetailView: React.FC<{
 /** Auth View */
 const AuthView: React.FC<{ 
     onLogin: () => void; 
-    onSignUp: (email: string, pass: string) => Promise<{ success: boolean, error?: string }>;
+    onSignUp: (fullName: string, email: string, pass: string, mobileNumber?: string) => Promise<{ success: boolean, error?: string }>;
     onLoginAttempt: (email: string, pass: string) => Promise<{ success: boolean, error?: string }>;
     setView: (v: View) => void;
 }> = ({ onLogin, onSignUp, onLoginAttempt, setView }) => {
     
     const [isLoginView, setIsLoginView] = useState(true);
+    const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
+    const [mobileNumber, setMobileNumber] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null); 
-        if (password.length < 6) { setError('Password must be at least 6 characters.'); return; }
-        const result = isLoginView ? await onLoginAttempt(email, password) : await onSignUp(email, password);
+        setError(null);
+
+        if (!isLoginView) {
+            if (!fullName.trim()) {
+                setError('Full name is required.');
+                return;
+            }
+            if (password.length < 6) {
+                setError('Password must be at least 6 characters.');
+                return;
+            }
+            if (password !== confirmPassword) {
+                setError('Password and confirm password must match.');
+                return;
+            }
+            const cleanedMobile = mobileNumber.trim();
+            if (cleanedMobile && !/^[6-9]\d{9}$/.test(cleanedMobile)) {
+                setError('Mobile number must be 10 digits and start with 6, 7, 8, or 9.');
+                return;
+            }
+        }
+
+        const result = isLoginView
+            ? await onLoginAttempt(email, password)
+            : await onSignUp(fullName.trim(), email, password, mobileNumber.trim() || undefined);
         if (!result.success) setError(result.error || 'Authentication failed.');
     };
 
@@ -1047,12 +1086,78 @@ const AuthView: React.FC<{
                 <h2 style={{fontSize: '28px', fontWeight: 'bold', color: '#c084fc', marginBottom: '8px', textAlign: 'center'}}>{isLoginView ? 'Welcome Back' : 'Create Account'}</h2>
                 {error && <div style={{padding: '12px', borderRadius: '8px', backgroundColor: '#ef4444', color: '#fff', marginBottom: '16px', textAlign: 'center'}}>{error}</div>}
                 <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                    {!isLoginView && (
+                        <input type="text" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} required className="input-field" />
+                    )}
                     <input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} required className="input-field" />
-                    <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required className="input-field" />
+                    {!isLoginView && (
+                        <input
+                            type="tel"
+                            placeholder="Mobile Number (Optional)"
+                            value={mobileNumber}
+                            onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                            className="input-field"
+                        />
+                    )}
+                    <div style={{position: 'relative'}}>
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder={isLoginView ? 'Password' : 'Password (Min 6 Characters)'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            className="input-field"
+                            style={{width: '100%', paddingRight: '44px'}}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(prev => !prev)}
+                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                            style={{position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', color: '#c4b5fd', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                        >
+                            {showPassword ? <EyeOffSvg style={{width: '18px', height: '18px'}} /> : <EyeSvg style={{width: '18px', height: '18px'}} />}
+                        </button>
+                    </div>
+                    {!isLoginView && (
+                        <div style={{position: 'relative'}}>
+                            <input
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                placeholder="Confirm Password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                                className="input-field"
+                                style={{width: '100%', paddingRight: '44px'}}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(prev => !prev)}
+                                aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                                style={{position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', color: '#c4b5fd', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                            >
+                                {showConfirmPassword ? <EyeOffSvg style={{width: '18px', height: '18px'}} /> : <EyeSvg style={{width: '18px', height: '18px'}} />}
+                            </button>
+                        </div>
+                    )}
                     <button type="submit" className="btn-primary" style={{backgroundColor: '#9333ea'}}>{isLoginView ? 'Log In' : 'Sign Up'}</button>
                 </form>
                 <div style={{textAlign: 'center', marginTop: '24px'}}>
-                    <button onClick={() => { setIsLoginView(!isLoginView); setError(null); }} style={{color: '#c084fc', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline'}}>{isLoginView ? 'Need an account? Sign Up' : 'Have an account? Log In'}</button>
+                    <button
+                        onClick={() => {
+                            setIsLoginView(!isLoginView);
+                            setError(null);
+                            setFullName('');
+                            setEmail('');
+                            setMobileNumber('');
+                            setPassword('');
+                            setConfirmPassword('');
+                            setShowPassword(false);
+                            setShowConfirmPassword(false);
+                        }}
+                        style={{color: '#c084fc', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline'}}
+                    >
+                        {isLoginView ? 'Need an account? Sign Up' : 'Have an account? Log In'}
+                    </button>
                 </div>
             </div>
         </main>
@@ -1067,6 +1172,7 @@ const AdminAuthView: React.FC<{
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -1088,7 +1194,25 @@ const AdminAuthView: React.FC<{
                 {error && <div style={{padding: '12px', borderRadius: '8px', backgroundColor: '#ef4444', color: '#fff', marginBottom: '16px', textAlign: 'center'}}>{error}</div>}
                 <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
                     <input type="email" placeholder="Admin Email" value={email} onChange={(e) => setEmail(e.target.value)} required className="input-field" />
-                    <input type="password" placeholder="Admin Password" value={password} onChange={(e) => setPassword(e.target.value)} required className="input-field" />
+                    <div style={{position: 'relative'}}>
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="Admin Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            className="input-field"
+                            style={{width: '100%', paddingRight: '44px'}}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(prev => !prev)}
+                            aria-label={showPassword ? 'Hide admin password' : 'Show admin password'}
+                            style={{position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', color: '#fbbf24', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                        >
+                            {showPassword ? <EyeOffSvg style={{width: '18px', height: '18px'}} /> : <EyeSvg style={{width: '18px', height: '18px'}} />}
+                        </button>
+                    </div>
                     <button type="submit" className="btn-primary" style={{backgroundColor: '#f59e0b'}}>Login as Admin</button>
                 </form>
                 <div style={{textAlign: 'center', marginTop: '24px'}}>
@@ -1244,7 +1368,7 @@ const App = () => {
                 {view === 'user-dashboard' && currentUser && !currentUser.isAdmin && <UserDashboardView user={currentUser} setView={setView} onViewDetail={handleViewDetail} onLogout={handleLogout} />}
                 {view === 'listings' && <ListingsView listings={listings} currentUserId={currentUser?.uid || null} onViewDetail={handleViewDetail} />}
                 {view === 'sell' && <SellCarPage currentUser={currentUser} onBack={() => setView('home')} />}
-                {view === 'auth' && <AuthView onLogin={() => setView('user-dashboard')} onSignUp={async (e, p) => { const res = await signUp(e, p); if(res.success) setView('user-dashboard'); return res; }} onLoginAttempt={async (e, p) => { const res = await logIn(e, p); if(res.success) setView('user-dashboard'); return res; }} setView={setView} />}
+                {view === 'auth' && <AuthView onLogin={() => setView('user-dashboard')} onSignUp={async (n, e, p, m) => { const res = await signUp(n, e, p, m); if(res.success) setView('user-dashboard'); return res; }} onLoginAttempt={async (e, p) => { const res = await logIn(e, p); if(res.success) setView('user-dashboard'); return res; }} setView={setView} />}
                 {view === 'admin-auth' && <AdminAuthView onAdminLogin={async (e, p) => { const res = await adminLogIn(e, p); if(res.success) setView('admin'); return res; }} setView={setView} />}
                 {view === 'detail' && selectedCar && <CarDetailView car={selectedCar} onBack={() => setView('listings')} currentUser={currentUser} onContactSeller={handleContactSeller} onBuyNow={handleBuyNow} />}
                 {view === 'inbox' && currentUser && <InboxView threads={getThreads(currentUser.uid)} currentUser={currentUser} onViewThread={handleViewThread} />}
