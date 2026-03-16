@@ -44,7 +44,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onBack }) => {
             const response = await fetch(`${API_URL}/admin/listings`);
             if (response.ok) {
                 const listings = await response.json();
-                setAllListings(listings);
+                setAllListings(Array.isArray(listings) ? listings : []);
             }
         } catch (error) {
             console.error('Error fetching listings:', error);
@@ -58,7 +58,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onBack }) => {
             const response = await fetch(`${API_URL}/admin/users`);
             if (response.ok) {
                 const users = await response.json();
-                setRegisteredUsers(users);
+                setRegisteredUsers(Array.isArray(users) ? users : []);
             }
         } catch (error) {
             console.error('Error fetching users:', error);

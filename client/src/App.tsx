@@ -129,7 +129,7 @@ const useListingsState = () => {
         try {
             const res = await fetch(`${API_URL}/listings`);
             const data = await res.json();
-            setListings(data);
+            setListings(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching listings', error);
         }
@@ -274,7 +274,7 @@ const useChatState = () => {
         try {
             const res = await fetch(`${API_URL}/chat/threads/${userUid}`);
             const data = await res.json();
-            setThreads(data);
+            setThreads(Array.isArray(data) ? data : []);
         } catch (e) { console.error(e); }
     };
 
@@ -282,7 +282,7 @@ const useChatState = () => {
         try {
             const res = await fetch(`${API_URL}/chat/messages/${threadId}`);
             const data = await res.json();
-            setMessages(prev => ({ ...prev, [threadId]: data }));
+            setMessages(prev => ({ ...prev, [threadId]: Array.isArray(data) ? data : [] }));
         } catch (e) { console.error(e); }
     };
 
@@ -826,7 +826,7 @@ const UserDashboardView: React.FC<{
             <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 16px'}}>
                 {/* Welcome Banner */}
                 <div style={{backgroundColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '40px', borderRadius: '16px', marginBottom: '48px', boxShadow: '0 20px 25px rgba(0, 0, 0, 0.4)'}}>
-                    <h1 style={{fontSize: '40px', fontWeight: '900', color: '#fff', marginBottom: '8px'}}>Welcome, {user.email}</h1>
+                    <h1 style={{fontSize: '40px', fontWeight: '900', color: '#fff', marginBottom: '8px'}}>Welcome, {(user.fullName && user.fullName.trim()) ? user.fullName.split(' ')[0] : user.email}</h1>
                     <p style={{fontSize: '18px', color: '#e9ecef', margin: 0}}>Your personal dashboard</p>
                 </div>
 
