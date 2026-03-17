@@ -155,10 +155,10 @@ const ListingsPage: React.FC<ListingsPageProps> = ({ searchParams, onBack }) => 
                     className="w-full bg-gray-700 border border-gray-600 rounded-lg text-white p-2 focus:ring-red-500 focus:border-red-500"
                 >
                     <option value="">Any Price</option>
-                    <option value="20000">Under $20,000</option>
-                    <option value="40000">Under $40,000</option>
-                    <option value="60000">Under $60,000</option>
-                    <option value="100000">Under $100,000</option>
+                    <option value="20000">Under ₹20,000</option>
+                    <option value="40000">Under ₹40,000</option>
+                    <option value="60000">Under ₹60,000</option>
+                    <option value="100000">Under ₹100,000</option>
                 </select>
             </div>
 
@@ -209,7 +209,7 @@ const ListingsPage: React.FC<ListingsPageProps> = ({ searchParams, onBack }) => 
             />
             <div className="p-6">
                 <h3 className="text-2xl font-bold text-white mb-1">{car.year} {car.make} {car.model}</h3>
-                <p className="text-3xl font-extrabold text-red-500 mb-4">${car.price.toLocaleString()}</p>
+                <p className="text-3xl font-extrabold text-red-500 mb-4">₹{car.price.toLocaleString()}</p>
                 
                 <div className="text-gray-400 text-sm space-y-2">
                     <p>

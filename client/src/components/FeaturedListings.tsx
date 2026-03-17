@@ -64,8 +64,8 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = () => {
             <img src={car.imageUrls?.[0] || 'https://placehold.co/600x400/1f2937/ffffff?text=Image+Unavailable'} alt={`${car.make} ${car.model}`} className="w-full h-48 object-cover object-center" />
             <div className="p-5">
               <h3 className="text-xl font-semibold text-white mb-2">{car.year} {car.make} {car.model}</h3>
-              <p className="text-gray-300 text-sm mb-1">
-                <span className="font-medium text-red-400">${car.price.toLocaleString()}</span> &bull; {car.mileage.toLocaleString()} miles
+                <p className="text-gray-300 text-sm mb-1">
+                <span className="font-medium text-red-400">₹{car.price.toLocaleString()}</span> &bull; {car.mileage.toLocaleString()} miles
               </p>
               <p className="text-gray-400 text-sm mb-3">{car.description}</p>
               <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition duration-300 font-medium">

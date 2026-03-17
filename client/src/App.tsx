@@ -494,7 +494,7 @@ const CarCard: React.FC<{
             />
             <div style={{padding: '20px'}}>
                 <h4 style={{fontSize: '20px', fontWeight: 'bold', color: '#a5b4fc', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{car.make} {car.model}</h4>
-                <p style={{fontSize: '30px', fontWeight: '900', color: '#fff', margin: '8px 0'}}>${car.price.toLocaleString()}</p>
+                <p style={{fontSize: '30px', fontWeight: '900', color: '#fff', margin: '8px 0'}}>₹{car.price.toLocaleString()}</p>
                 
                 <div style={{fontSize: '14px', color: '#9ca3af', lineHeight: '1.5', marginTop: '10px'}}>
                     <p style={{marginBottom: '4px'}}><strong>Year:</strong> {car.year}</p>
@@ -556,7 +556,7 @@ const PaymentModal: React.FC<{
                         
                         <div style={{backgroundColor: '#374151', padding: '16px', borderRadius: '8px', marginBottom: '24px', border: '1px solid #4b5563'}}>
                             <p style={{color: '#9ca3af', fontSize: '14px'}}>Total Amount</p>
-                            <p style={{color: '#fff', fontSize: '28px', fontWeight: '900'}}>${car.price.toLocaleString()}</p>
+                            <p style={{color: '#fff', fontSize: '28px', fontWeight: '900'}}>₹{car.price.toLocaleString()}</p>
                             <p style={{color: '#a5b4fc', fontSize: '14px'}}>{car.year} {car.make} {car.model}</p>
                         </div>
 
@@ -584,7 +584,7 @@ const PaymentModal: React.FC<{
                         <div style={{display: 'flex', gap: '16px', marginTop: '32px'}}>
                             <button type="button" onClick={onClose} className="btn-cancel" style={{flex: 1}}>Cancel</button>
                             <button type="submit" className="btn-primary" style={{flex: 2, backgroundColor: '#10b981'}}>
-                                Pay ${car.price.toLocaleString()}
+                                Pay ₹{car.price.toLocaleString()}
                             </button>
                         </div>
                     </form>
@@ -686,7 +686,7 @@ const InvoiceView: React.FC<{
                                 <strong>{car.year} {car.make} {car.model}</strong>
                                 <div style={{fontSize: '12px', color: '#666', marginTop: '4px'}}>VIN: {car.id.toUpperCase()} | Mileage: {car.mileage} mi</div>
                             </td>
-                            <td style={{textAlign: 'right', padding: '16px 12px'}}>${car.price.toLocaleString()}.00</td>
+                            <td style={{textAlign: 'right', padding: '16px 12px'}}>₹{car.price.toLocaleString()}.00</td>
                         </tr>
                         <tr style={{borderBottom: '1px solid #eee'}}>
                             <td style={{padding: '16px 12px', color: '#666'}}>Platform & Processing Fees (Included)</td>
@@ -990,7 +990,7 @@ const CarDetailView: React.FC<{
                     <div style={{backgroundColor: '#1f2937', padding: '32px', borderRadius: '12px', border: '1px solid #4338ca50'}}>
                         <h2 style={{fontSize: '32px', fontWeight: '900', color: '#a5b4fc', margin: 0}}>{car.make} {car.model}</h2>
                         <p style={{fontSize: '18px', fontWeight: 500, color: '#d1d5db', marginBottom: '24px'}}>{car.year}</p>
-                        <p style={{fontSize: '48px', fontWeight: '900', color: '#fff', margin: '0 0 24px 0'}}>${car.price.toLocaleString()}</p>
+                        <p style={{fontSize: '48px', fontWeight: '900', color: '#fff', margin: '0 0 24px 0'}}>₹{car.price.toLocaleString()}</p>
                         
                         <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '16px', color: '#9ca3af', marginBottom: '24px'}}>
                             <div><strong style={{color: '#d1d5db'}}>Mileage</strong><p>{car.mileage.toLocaleString()} mi</p></div>
